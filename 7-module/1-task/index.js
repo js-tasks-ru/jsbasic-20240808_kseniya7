@@ -3,6 +3,7 @@ import createElement from '../../assets/lib/create-element.js';
 export default class RibbonMenu {
   constructor(categories) {
     this.categories = categories;
+
     this.render();
     this.addEventListeners();
     this.value = '';
@@ -20,18 +21,21 @@ export default class RibbonMenu {
         </button>
       </div>
     `);
+
     for (let category of this.categories) {
       let categoryElem = createElement(`<a href="#" class="ribbon__item"></a>`);
-      categoryElem.textContent = category.name;
+      categoryElem.textContent = category.name; // insert as text, not as HTML!
       categoryElem.dataset.id = category.id;
       this.elem.querySelector('.ribbon__inner').append(categoryElem);
     }
+
     this.sub('item').classList.add('ribbon__item_active');
   }
 
   addEventListeners() {
     this.sub('arrow_left').onclick = (event) => this.onArrowLeftClick(event);
     this.sub('arrow_right').onclick = (event) => this.onArrowRightClick(event);
+
     this.elem.onclick = (event) => {
       let itemElem = event.target.closest('.ribbon__item');
       if (itemElem) {
@@ -39,6 +43,7 @@ export default class RibbonMenu {
         event.preventDefault();
       }
     };
+
     this.sub('inner').onscroll = (event) => this.onScroll(event);
   }
 
@@ -59,8 +64,11 @@ export default class RibbonMenu {
     if (oldActive) {
       oldActive.classList.remove('ribbon__item_active');
     }
+
     itemElem.classList.add('ribbon__item_active');
+
     this.value = itemElem.dataset.id;
+
     this.elem.dispatchEvent(
       new CustomEvent('ribbon-select', {
         detail: this.value,
@@ -91,6 +99,7 @@ export default class RibbonMenu {
     } else {
       this.sub('arrow_left').classList.remove('ribbon__arrow_visible');
     }
+
     let scrollRight = this.scrollRight();
     scrollRight = scrollRight < 1 ? 0 : scrollRight; // Это нужно для ситуации, когда скролл произошел с погрешностью
     if (scrollRight > 0) {
@@ -99,4 +108,5 @@ export default class RibbonMenu {
       this.sub('arrow_right').classList.remove('ribbon__arrow_visible');
     }
   }
+
 }
